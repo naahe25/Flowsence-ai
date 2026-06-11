@@ -312,6 +312,17 @@ function Landing({ setPage }) {
   const [activeF, setActiveF] = useState(0);
   const [navOpen, setNavOpen] = useState(false);
 
+  // Helper function to handle smooth scrolling safely
+  const scrollToSection = (id) => {
+    setNavOpen(false); // Close mobile menu if open
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
+  };
+
   const competitors = [
     { name: "Calendly", price: "$10–$16/mo", flaw: "Meetings only. No payments or service logic." },
     { name: "Acuity", price: "$20–$46/mo", flaw: "Owned by Squarespace. Rigid, limited AI." },
@@ -333,8 +344,6 @@ function Landing({ setPage }) {
     { name: "Pro", price: "$39", features: ["Everything in Starter", "No-show prediction", "Smart waitlist AI", "Client risk scores"], cta: "Start Free Trial", hi: true },
     { name: "Premium", price: "$79", features: ["Everything in Pro", "Dynamic pricing AI", "WhatsApp + SMS", "Custom branding"], cta: "Book a Demo", hi: false },
   ];
-
-  const pad = isMobile ? "0 16px" : "0 48px";
 
   return (
     <div style={{ minHeight: "100vh" }}>
@@ -359,7 +368,10 @@ function Landing({ setPage }) {
           </div>
         ) : (
           <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-            {["Features", "Pricing", "About"].map(l => <span key={l} className="nav-link">{l}</span>)}
+            {/* Added onClick actions targeting section IDs */}
+            <span className="nav-link" onClick={() => scrollToSection("features")}>Features</span>
+            <span className="nav-link" onClick={() => scrollToSection("pricing")}>Pricing</span>
+            <span className="nav-link" onClick={() => scrollToSection("about")}>About</span>
             <button className="btn-ghost" style={{ padding: "8px 16px" }} onClick={() => setPage("dashboard")}>Sign In</button>
             <button className="btn-gold" onClick={() => setPage("dashboard")}>Start Free Trial</button>
           </div>
@@ -369,20 +381,20 @@ function Landing({ setPage }) {
       {/* Mobile nav sheet */}
       {isMobile && navOpen && (
         <div style={{ background: T.surface, borderBottom: `1px solid ${T.border}`, padding: "8px 0" }}>
-          {["Features", "Pricing", "About"].map(l => (
-            <div key={l} style={{ padding: "12px 20px", color: T.ivoryDim, fontSize: 15, borderBottom: `1px solid ${T.border}` }}>{l}</div>
-          ))}
+          <div onClick={() => scrollToSection("features")} style={{ padding: "12px 20px", color: T.ivoryDim, fontSize: 15, borderBottom: `1px solid ${T.border}`, cursor: "pointer" }}>Features</div>
+          <div onClick={() => scrollToSection("pricing")} style={{ padding: "12px 20px", color: T.ivoryDim, fontSize: 15, borderBottom: `1px solid ${T.border}`, cursor: "pointer" }}>Pricing</div>
+          <div onClick={() => scrollToSection("about")} style={{ padding: "12px 20px", color: T.ivoryDim, fontSize: 15, borderBottom: `1px solid ${T.border}`, cursor: "pointer" }}>About</div>
           <div style={{ padding: "12px 20px" }}>
             <button className="btn-gold" style={{ width: "100%", textAlign: "center" }} onClick={() => setPage("dashboard")}>Start Free Trial</button>
           </div>
         </div>
       )}
 
-      {/* Hero */}
-      <section style={{
+      {/* Hero / About Context Target */}
+      <section id="about" style={{
         minHeight: "88vh", display: "flex", flexDirection: "column", alignItems: "center",
         justifyContent: "center", textAlign: "center",
-        padding: isMobile ? "60px 20px 40px" : "80px 24px",
+        padding: isMobile ? "60px 16px 40px" : "80px 24px",
         background: "radial-gradient(ellipse 80% 55% at 50% 0%,rgba(201,150,63,.07) 0%,transparent 70%)"
       }}>
         <div style={{
@@ -394,44 +406,48 @@ function Landing({ setPage }) {
           <Zap size={10} /> AI-NATIVE SCHEDULING
         </div>
         <h1 className="serif" style={{
-          fontSize: isMobile ? 36 : "clamp(44px,7vw,88px)",
-          fontWeight: 700, lineHeight: 1.06, maxWidth: 860, marginBottom: 20
+          fontSize: isMobile ? 32 : "clamp(44px,7vw,88px)",
+          fontWeight: 700, lineHeight: 1.1, maxWidth: 860, marginBottom: 20
         }}>
           Book, pay, show up —<br />
           <span style={{ color: T.gold, fontStyle: "italic" }}>without touching a calendar.</span>
         </h1>
-        <p style={{ fontSize: isMobile ? 15 : 17, color: T.ivoryDim, maxWidth: 520, marginBottom: 36, lineHeight: 1.75 }}>
+        <p style={{ fontSize: isMobile ? 14 : 17, color: T.ivoryDim, maxWidth: 520, marginBottom: 36, lineHeight: 1.75 }}>
           Service businesses lose 5–10 hours every week to scheduling chaos. FlowSense ends that automatically.
         </p>
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-          <button className="btn-gold" style={{ padding: "13px 28px", fontSize: 15 }} onClick={() => setPage("dashboard")}>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", width: "100%" }}>
+          <button className="btn-gold" style={{ padding: "13px 28px", fontSize: 14, width: isMobile ? "100%" : "auto" }} onClick={() => setPage("dashboard")}>
             Start Free — No Credit Card
           </button>
-          <button className="btn-ghost" style={{ padding: "13px 22px", fontSize: 15, display: "flex", alignItems: "center", gap: 8 }}
+          <button className="btn-ghost" style={{ padding: "13px 22px", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: isMobile ? "100%" : "auto" }}
             onClick={() => setPage("widget")}>
             See Booking Widget <ArrowRight size={13} />
           </button>
         </div>
-        <div style={{ display: "flex", gap: isMobile ? 20 : 40, marginTop: 52, flexWrap: "wrap", justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: isMobile ? 16 : 40, marginTop: 52, flexWrap: "wrap", justifyContent: "center" }}>
           {[["2,400+", "Businesses"], ["$18M+", "Revenue Booked"], ["94%", "Fewer No-Shows"]].map(([v, l]) => (
-            <div key={l} style={{ textAlign: "center" }}>
-              <div className="serif" style={{ fontSize: isMobile ? 26 : 32, fontWeight: 700, color: T.gold }}>{v}</div>
-              <div style={{ fontSize: 12, color: T.ivoryMuted }}>{l}</div>
+            <div key={l} style={{ textAlign: "center", minWidth: isMobile ? "100px" : "auto" }}>
+              <div className="serif" style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, color: T.gold }}>{v}</div>
+              <div style={{ fontSize: 11, color: T.ivoryMuted }}>{l}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Competitors */}
+      {/* Competitors Segment */}
       <section style={{ padding: isMobile ? "48px 16px" : "72px 48px", maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ fontSize: 11, color: T.gold, fontWeight: 600, letterSpacing: ".1em", marginBottom: 10 }}>THE COMPETITION</div>
-          <h2 className="serif" style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700 }}>Everyone else built for meetings.</h2>
+          <h2 className="serif" style={{ fontSize: isMobile ? 26 : 40, fontWeight: 700, lineHeight: 1.2 }}>Everyone else built for meetings.</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(5,1fr)", gap: 10 }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(190px, 1fr))",
+          gap: 12
+        }}>
           {competitors.map(c => (
             <div key={c.name} className="card" style={{ padding: 14 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                 <div style={{ fontWeight: 600, fontSize: 13 }}>{c.name}</div>
                 <X size={13} color={T.risk} />
               </div>
@@ -440,20 +456,20 @@ function Landing({ setPage }) {
             </div>
           ))}
         </div>
-        <div className="card" style={{ marginTop: 14, border: "1px solid rgba(201,150,63,.3)", background: "rgba(201,150,63,.04)", textAlign: "center", padding: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 6 }}>
+        <div className="card" style={{ marginTop: 16, border: "1px solid rgba(201,150,63,.3)", background: "rgba(201,150,63,.04)", textAlign: "center", padding: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
             <Check size={15} color={T.gold} />
-            <span className="serif" style={{ fontSize: 17, fontWeight: 600 }}>FlowSense AI — $19–$79/mo</span>
+            <span className="serif" style={{ fontSize: 16, fontWeight: 600 }}>FlowSense AI — $19–$79/mo</span>
           </div>
-          <div style={{ fontSize: 13, color: T.ivoryDim }}>AI-native. Payments built in. Predictive engine. No per-client fees.</div>
+          <div style={{ fontSize: 13, color: T.ivoryDim, lineHeight: 1.4 }}>AI-native. Payments built in. Predictive engine. No per-client fees.</div>
         </div>
       </section>
 
-      {/* Features */}
-      <section style={{ padding: isMobile ? "48px 16px" : "72px 48px", maxWidth: 1100, margin: "0 auto" }}>
+      {/* Features Target */}
+      <section id="features" style={{ padding: isMobile ? "48px 16px" : "72px 48px", maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ fontSize: 11, color: T.gold, fontWeight: 600, letterSpacing: ".1em", marginBottom: 10 }}>FIVE CORE CAPABILITIES</div>
-          <h2 className="serif" style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700 }}>Intelligence at every step.</h2>
+          <h2 className="serif" style={{ fontSize: isMobile ? 26 : 40, fontWeight: 700, lineHeight: 1.2 }}>Intelligence at every step.</h2>
         </div>
 
         {isMobile ? (
@@ -461,7 +477,7 @@ function Landing({ setPage }) {
             {features.map((f, i) => (
               <div key={i} className="card" style={{ padding: 16 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 8, background: "rgba(201,150,63,.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 8, background: "rgba(201,150,63,.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <f.icon size={16} color={T.gold} />
                   </div>
                   <span style={{ fontWeight: 600, fontSize: 14 }}>{f.title}</span>
@@ -471,7 +487,7 @@ function Landing({ setPage }) {
             ))}
           </div>
         ) : (
-          <div style={{ display: "flex", gap: 16 }}>
+          <div style={{ display: "flex", gap: 16, alignItems: "stretch" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, width: 260, flexShrink: 0 }}>
               {features.map((f, i) => (
                 <div key={i} onClick={() => setActiveF(i)} className="card"
@@ -503,20 +519,26 @@ function Landing({ setPage }) {
         )}
       </section>
 
-      {/* Pricing */}
-      <section style={{ padding: isMobile ? "48px 16px" : "72px 48px", maxWidth: 1100, margin: "0 auto" }}>
+      {/* Pricing Target */}
+      <section id="pricing" style={{ padding: isMobile ? "48px 16px" : "72px 48px", maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ fontSize: 11, color: T.gold, fontWeight: 600, letterSpacing: ".1em", marginBottom: 10 }}>PRICING</div>
-          <h2 className="serif" style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700 }}>Simple, flat pricing.</h2>
+          <h2 className="serif" style={{ fontSize: isMobile ? 26 : 40, fontWeight: 700, lineHeight: 1.2 }}>Simple, flat pricing.</h2>
           <p style={{ color: T.ivoryDim, marginTop: 10, fontSize: 14 }}>No per-client fees. No lock-in. Cancel any time.</p>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 16 }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+          gap: 20,
+          alignItems: "start"
+        }}>
           {plans.map(p => (
             <div key={p.name} className={`card${p.hi ? " ai-card" : ""}`}
               style={{
                 padding: 24, border: `1px solid ${p.hi ? "rgba(201,150,63,.4)" : T.border}`,
                 background: p.hi ? "rgba(201,150,63,.04)" : T.surface,
-                position: "relative", transform: p.hi && !isMobile ? "translateY(-8px)" : "none"
+                position: "relative", transform: p.hi && !isMobile ? "translateY(-8px)" : "none",
+                marginTop: p.hi && isMobile ? 12 : 0
               }}>
               {p.hi && (
                 <div style={{
@@ -532,10 +554,10 @@ function Landing({ setPage }) {
                   <span style={{ color: T.ivoryMuted, fontSize: 13, paddingBottom: 6 }}>/mo</span>
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 24 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
                 {p.features.map(f => (
                   <div key={f} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13, color: T.ivoryDim }}>
-                    <Check size={12} color={T.gold} /> {f}
+                    <Check size={12} color={T.gold} style={{ flexShrink: 0 }} /> <span style={{ lineHeight: 1.3 }}>{f}</span>
                   </div>
                 ))}
               </div>
@@ -550,16 +572,16 @@ function Landing({ setPage }) {
 
       {/* Final CTA */}
       <section style={{
-        padding: isMobile ? "56px 20px" : "72px 48px", textAlign: "center",
+        padding: isMobile ? "56px 16px" : "72px 48px", textAlign: "center",
         background: "linear-gradient(180deg,transparent,rgba(201,150,63,.04))"
       }}>
-        <h2 className="serif" style={{ fontSize: isMobile ? 28 : 46, fontWeight: 700, marginBottom: 18, lineHeight: 1.15 }}>
+        <h2 className="serif" style={{ fontSize: isMobile ? 24 : 46, fontWeight: 700, marginBottom: 18, lineHeight: 1.2 }}>
           Your schedule shouldn't run your business.
         </h2>
-        <p style={{ color: T.ivoryDim, fontSize: 15, marginBottom: 32, maxWidth: 460, margin: "0 auto 32px" }}>
+        <p style={{ color: T.ivoryDim, fontSize: 14, marginBottom: 32, maxWidth: 460, margin: "0 auto 32px", lineHeight: 1.6 }}>
           Set up in under 10 minutes. Starts filling your calendar on day one.
         </p>
-        <button className="btn-gold" style={{ padding: "14px 36px", fontSize: 15 }} onClick={() => setPage("dashboard")}>
+        <button className="btn-gold" style={{ padding: "14px 36px", fontSize: 15, width: isMobile ? "100%" : "auto" }} onClick={() => setPage("dashboard")}>
           Get Started Free
         </button>
       </section>
@@ -569,7 +591,7 @@ function Landing({ setPage }) {
         borderTop: `1px solid ${T.border}`,
         padding: isMobile ? "24px 16px" : "28px 48px",
         display: "flex", justifyContent: "space-between", alignItems: "center",
-        flexWrap: "wrap", gap: 12
+        flexDirection: isMobile ? "column" : "row", gap: 16
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{ width: 22, height: 22, borderRadius: 4, background: T.gold, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -577,7 +599,7 @@ function Landing({ setPage }) {
           </div>
           <span className="serif" style={{ fontWeight: 600, fontSize: 14 }}>FlowSense AI</span>
         </div>
-        <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 20, flexWrap: "wrap", justifyContent: "center" }}>
           {["Privacy", "Terms", "Support"].map(l => <span key={l} style={{ fontSize: 12, color: T.ivoryMuted, cursor: "pointer" }}>{l}</span>)}
         </div>
         <div style={{ fontSize: 12, color: T.ivoryMuted }}>© 2026 FlowSense AI</div>
